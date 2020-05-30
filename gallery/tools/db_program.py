@@ -1,4 +1,5 @@
 from db import *
+
 # Begins program to interact with database
 def db_program():
     # Begin program and only run while option 5 is not entered
@@ -32,8 +33,12 @@ def db_program():
 
             # Check if user is real
             yes_no = input("Are you sure you want to delete " + user + "? ")
-
-            # If yes, delete. If no, do nothing
+            if yes_no == "yes":
+                # If yes, delete. If no, do nothing
+                res = execute("DELETE FROM users WHERE username = %s;", (user,))
+                if res.rowcount == 0:
+                    print("\nNo such user.")
+                print()
         elif response == "5":
             program_run = False
 

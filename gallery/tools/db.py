@@ -11,6 +11,7 @@ def get_password():
     f = open(password_file, "r")
     result = f.readline()
     f.close()
+    print("Password retrieved!")
     return result[:-1]
 
 def connect():
@@ -26,15 +27,15 @@ def execute(query, args = None):
         cursor.execute(query, args)
     return cursor
 
-def main():
-    connect()
-    res = execute("SELECT * FROM users;")
-    for row in res:
-        print(row)
+#def main():
+#    connect()
+#    res = execute("SELECT * FROM users;")
+#    for row in res:
+#        print(row)
 
-    res = execute("UPDATE users SET password = %s WHERE username = 'dza0042';", ("Lincoln120217",))
-    res = execute("SELECT * FROM users;")
-    for row in res:
-        print(row)
-if __name__ == "__main__":
-    main()
+#    res = execute("UPDATE users SET password = %s WHERE username = 'dza0042';", ("Lincoln120217",))
+#    res = execute("SELECT * FROM users;")
+#    for row in res:
+#        print(row)
+#if __name__ == "__main__":
+#    main()

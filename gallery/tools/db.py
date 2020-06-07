@@ -14,7 +14,7 @@ sql_update_pw = "UPDATE users SET password = %s WHERE username = %s;"
 sql_update_fn = "UPDATE users SET full_name = %s WHERE username = %s;"
 sql_update_pw_fn = "UPDATE users SET full_name = %s, password = %s  WHERE username = %s;"
 sql_delete = "DELETE FROM users WHERE username = %s;"
-
+sql_columns = "SELECT * FROM users LIMIT 0"
 
 def get_password():
     f = open(password_file, "r")
@@ -35,11 +35,18 @@ def select_all():
     try:
         connection =  psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = get_password())
         cursor = connection.cursor()
-        cursor.execute(sql_select_all)
-    
-        for row in cursor:
-            print(row)
 
+        cursor.execute(sql_select_all)
+        colnames = [desc[0] for desc in cursor.description] # Retrieves column names from database to then display with SELECT * results 
+                
+        for column in colnames:
+            print("{: <25}".format(column.upper()), end = " ")
+
+        print()
+        result = cursor.fetchall()
+        for row in result:
+            print("{: <25} {: <25} {: <25}".format(*row))
+            
     except psycopg2.DatabaseError as error:
         print(error)
 

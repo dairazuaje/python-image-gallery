@@ -10,37 +10,41 @@ def db_program():
         response = input(prompt)
         print()
 
-        # Execute based on option
-        if response == "1":
-            # List all users using execute() from db.py
-            select_all()
-            print()    
-        elif response == "2":
-            # Add user to database
-            user = input("Username> ")
-            pw = input("Password> ")
-            fn = input("Full name> ")
-            add(user, pw, fn);
-            print()
-        elif response == "3":
-            user = input("Username to edit> ")
-            pw = input("New password (press enter to keep current)> ")
-            fn = input ("New full name (press enter to keep current)> ")
-
-            edit(user, pw, fn)
-            # If user does not exist in DB, say "No such user."
-        elif response == "4":
-            user = input("Enter username to delete> ")
+        try:
             
-            # Check if user is real
-            yes_no = input("Are you sure you want to delete " + user + "? ")
-            if yes_no == "yes":
-                # If yes, delete. If no, do nothing
-                delete(user)
+            # Execute based on option
+            if int(response) == 1:
+                # List all users using execute() from db.py
+                select_all()
+                print()    
+            elif int(response) == 2:
+                # Add user to database
+                user = input("Username> ")
+                pw = input("Password> ")
+                fn = input("Full name> ")
+                add(user, pw, fn);
                 print()
-        elif response == "5":
-            program_run = False
+            elif int(response) == 3:
+                user = input("Username to edit> ")
+                pw = input("New password (press enter to keep current)> ")
+                fn = input ("New full name (press enter to keep current)> ")
 
+                edit(user, pw, fn)
+            elif int(response) == 4:
+                user = input("Enter username to delete> ")
+            
+                yes_no = input("Are you sure you want to delete " + user + "? ")
+                if yes_no == "yes" or yes_no == "Yes" or yes_no == "Y" or yes_no == "y":
+                    # If yes, delete. Else, do nothing
+                    delete(user)
+                    print()
+            elif int(response) == 5:
+                program_run = False
+            else:
+                print("Invalid option. Enter an option from above")
+        except ValueError as e:
+            print("Invalid option. Enter an option from above")
+            
     print("Bye.")
 
 def main():

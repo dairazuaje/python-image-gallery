@@ -60,11 +60,13 @@ def delete(user):
     try:
         connection =  psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = get_password())
         cursor = connection.cursor()
-        cursor.execute(sql_delete, (user,))
 
-        if cursor.rowcount == 1:
-            print("User has been deleted")
-        elif cursor.rowcount == 0:
+
+        if check_user(user):
+            cursor.execute(sql_delete, (user,))
+            if cursor.rowcount == 1:
+                print("User has been deleted")
+        else:
             print("No such user.")
 
     except psycopg2.DatabaseError as error:
@@ -99,24 +101,37 @@ def edit(user, pw, fn):
     try:
         connection =  psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = get_password())
         cursor = connection.cursor()
-        if pw == "" and fn != "":
-            cursor.execute(sql_update_fn, (fn, user,))
-        elif fn == "" and pw != "":
-            cursor.execute(sql_update_pw, (pw, user,))
-        elif fn != "" or pw != "":
-            cursor.execute(sql_update_pw_fn, (fn, pw, user,))
+        if check_user(user):
+            if pw == "" and fn != "":
+                cursor.execute(sql_update_fn, (fn, user,))
+            elif fn == "" and pw != "":
+                cursor.execute(sql_update_pw, (pw, user,))
+            elif fn != "" or pw != "":
+                cursor.execute(sql_update_pw_fn, (fn, pw, user,))
 
-        if cursor.rowcount != -1:
-            print("User has been edited")
+            if cursor.rowcount != -1:
+                print("User has been edited")
+            else:
+                print("Error: User not updated")
         else:
-            print("Error: User not updated")
-
+            print("No such user.")
     except psycopg2.DatabaseError as error:
         print(error)
     finally:
         if connection is not None:
             close()
             
+def check_user(user):
+    connection = psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = get_password())
+    cursor = connection.cursor()
+    sql = "SELECT * FROM users WHERE username = %s;"
+    cursor.execute(sql, (user,))
+    if cursor.rowcount > 0:
+        return True
+    else:
+        return False
+        print(error)
+        
 def close():
     connection.commit()
     cursor.close()

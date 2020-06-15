@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Modify User</title>
+        <meta charset = "utf-8" />
+        <style>
+            div {
+                text-align: center;
+            }
+
+            ol {
+                list-style-position: inside;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Modify User</h1>
+            <h2>Editing User: {{user}} </h2>
+
+            <a href="/admin">Back to homepage</a>
+
+            <br><br>
+            
+            <form action="/admin/process_edit_user_form{{user}}" method="POST">
+                <lable for="password">Enter Password: </lable>
+                <input type="text" id="password" name="password"><br>
+                <lable for="fullname">Enter Full Name: </lable>
+                <input type="text" id="fullname" name="fullname"><br><br>
+
+                <input type="submit" value="Update User"><br><br>
+            </form>
+        </div>
+    </body>
+</html>

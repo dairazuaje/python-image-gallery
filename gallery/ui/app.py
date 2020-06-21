@@ -7,6 +7,15 @@ from . import secrets
 
 app = Flask(__name__)
 
+@app.route("/")
+def test():
+    return """
+    <DOCTYPE html>
+    <html>
+    <head><title>Test</title><head>
+    <body><h1>Test</h1></body>
+    </html>
+    """
 
 @app.route("/admin")
 def admin():

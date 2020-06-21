@@ -5,4 +5,8 @@ if [ "$#" != "1" ]; then
    exit 1
 fi
 
-aws s3 cp ec2-scripts/ec2-prod-$1.sh s3://edu.au.cc.image-gallery-config
+BUCKET="edu.au.cc.image-gallery-config-dza0042"
+
+aws s3 cp ec2-scripts/ec2-prod-$1.sh s3://${BUCKET}
+aws s3 cp nginx/nginx.conf s3://${BUCKET}/nginx/nginx.conf
+aws s3 cp nginx/default.d/image_gallery.conf s3://${BUCKET}/nginx/default.d/image_gallery.conf

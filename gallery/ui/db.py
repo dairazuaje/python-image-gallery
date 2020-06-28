@@ -1,7 +1,7 @@
 import psycopg2
 import json
 from psycopg2 import OperationalError, errorcodes, errors
-from .secrets import get_secret_M5
+from .secrets import *
 
 # Configuration
 #db_host = "module5-image-gallery.cyoqs8hmumyv.us-east-1.rds.amazonaws.com"

@@ -2,7 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from flask import redirect
-from ..data.db import  *
+from .db import  *
 
 app = Flask(__name__)
 

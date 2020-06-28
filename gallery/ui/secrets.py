@@ -6,7 +6,8 @@ import boto3
 import base64
 from botocore.exceptions import ClientError
 
-def get_secret_image_gallery():
+
+def get_secret_M5():
 
     secret_name = "Module5-image-gallery-secret"
     region_name = "us-east-1"
@@ -54,9 +55,8 @@ def get_secret_image_gallery():
             secret = get_secret_value_response['SecretString']
         else:
             decoded_binary_secret = base64.b64decode(get_secret_value_response['SecretBinary'])
-            
-    # Your code goes here.
 
+    # Your code goes here.
     if secret is None:
         return decoded_binary_secret
     else:

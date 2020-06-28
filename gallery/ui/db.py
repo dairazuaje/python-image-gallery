@@ -4,10 +4,11 @@ from psycopg2 import OperationalError, errorcodes, errors
 from .secrets import *
 
 # Configuration
-# db_host = "image-gallery.cyoqs8hmumyv.us-east-1.rds.amazonaws.com"
-# db_name = "image_gallery"
-# db_user = "image_gallery"
+db_host = "module5-image-gallery.cyoqs8hmumyv.us-east-1.rds.amazonaws.com"
+db_name = "image_gallery"
+db_user = "image_gallery"
 # password_file = "/home/ec2-user/.image_gallery_config"
+password = "Keldailin120217!"
 
 # SQL Queries
 sql_select_all = "SELECT * FROM users;"

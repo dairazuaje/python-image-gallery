@@ -45,7 +45,7 @@ def connect():
     global connection
     #secret = get_secret()
     try:
-        connection = psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = get_password())
+        connection = psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = password)
         #connection = psycopg2.connect(host=get_host(secret), dbname=get_database(secret), user=get_username(secret),
                                       password=get_password(secret))
     except psycopg2.DatabaseError as error:

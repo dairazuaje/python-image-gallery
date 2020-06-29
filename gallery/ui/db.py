@@ -22,6 +22,7 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 
 def get_secret():
     jsonString = get_secret_M5()
+    jsonString = json.dumps(jsonString)
     return json.loads(jsonString)
 
 

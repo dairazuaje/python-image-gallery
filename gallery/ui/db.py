@@ -1,6 +1,5 @@
 import psycopg2
 import json
-import yaml
 from psycopg2 import OperationalError, errorcodes, errors
 from .secrets import *
 
@@ -22,15 +21,10 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 
 
 def get_secret():
-    str = yaml.load(str)
-    str = json.dumps(str)
-    secret = json.loads(str)
-    print(secret["host_name"])
-
     jsonString = get_secret_M5()
-    jsonString = yaml.load(jsonString)
-    jsonString = json.dumps(jsonString)
-    return json.loads(jsonString)
+    jsonString = jsonString.replace("'", "\"")
+    sec = json.loads(jsonString)
+    return sec
 
 
 def get_password(secret):
@@ -38,7 +32,7 @@ def get_password(secret):
 
 
 def get_host(secret):
-    return secret["host"]
+    return secret["host_name"]
 
 
 def get_username(secret):

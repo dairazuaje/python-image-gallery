@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <meta charset = "utf-8" />
+    <style>
+        div {
+            text-align: center;
+            width: 25%;
+            margin: auto;
+            border: black 1px solid;
+        }
+
+        ol {
+            list-style-position: inside;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <h1>Login to Image Gallery</h1>
+
+    <br>
+
+    <form action="/process_login" method="POST">
+        <lable for="username">Enter Username: </lable>
+        <input type="text" id="username" name="username"><br>
+        <lable for="password">Enter Password: </lable>
+        <input type="password" id="password" name="password"><br>
+        
+        <input type="submit" value="LOGIN"><br><br>
+    </form>
+</div>
+</body>
+</html>

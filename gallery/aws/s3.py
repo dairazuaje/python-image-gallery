@@ -48,10 +48,10 @@ def get_object(bucket_name, key):
         return none
     return result
 
-def main():
-    #create_bucket('edu.au.cc.image-gallery-4491', 'us-east-2')
-    put_object("edu.au.cc.image-gallery-4491", "banana", "green")
-    print(get_object("edu.au.cc.image-gallery-4491", "banana")["Body"].read())
+# def main():
+#     #create_bucket('edu.au.cc.image-gallery-4491', 'us-east-2')
+#     put_object("edu.au.cc.image-gallery-4491", "banana", "green")
+#     print(get_object("edu.au.cc.image-gallery-4491", "banana")["Body"].read())
     
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

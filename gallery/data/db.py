@@ -38,21 +38,25 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 
 def get_password(secret):
     #return secret["password"]
-    return os.getenv("IG_PASSWD")
+    print(os.getenv("IG_PASSWD"))
+    return str(os.getenv("IG_PASSWD"))
 
 
 def get_host(secret):
     #return secret["host_name"]
-    return os.getenv("PG_HOST")
+    print(os.getenv("PG_HOST"))
+    return str(os.getenv("PG_HOST"))
 
 
 def get_username(secret):
     #return secret["username"]
-    return os.getenv("IG_USER")
+    print(os.getenv("IG_USER"))
+    return str(os.getenv("IG_USER"))
 
 def get_database(secret):
     #return secret["database_name"]
-    return os.getenv("IG_DATABASE")
+    print(os.getenv("IG_DATABASE"))
+    return str(os.getenv("IG_DATABASE"))
 
 
 def connect():

@@ -1,3 +1,4 @@
+import os
 import psycopg2
 import json
 from psycopg2 import OperationalError, errorcodes, errors
@@ -30,25 +31,28 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 #    return sec
 
 # Retrieves password in original VPC that was created
-def get_secret():
-    jsonString = get_secret_image_gallery()
-    return json.loads(jsonString)
+#def get_secret():
+#    jsonString = get_secret_image_gallery()
+#   return json.loads(jsonString)
 
 
 def get_password(secret):
-    return secret["password"]
+    #return secret["password"]
+    return os.getenv("IG_PASSWD")
 
 
 def get_host(secret):
-    return secret["host_name"]
+    #return secret["host_name"]
+    return os.getenv("PG_HOST")
 
 
 def get_username(secret):
-    return secret["username"]
-
+    #return secret["username"]
+    return os.getenv("IG_USER")
 
 def get_database(secret):
-    return secret["database_name"]
+    #return secret["database_name"]
+    return os.getenv("IG_DATABASE")
 
 
 def connect():

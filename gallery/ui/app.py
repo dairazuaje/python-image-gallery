@@ -99,7 +99,7 @@ def login():
 def process_login():
     username = request.form["username"]
     password = request.form["password"]
-    if db.check_password(username, password):
+    if check_password(username, password):
         session["username"] = request.form["username"]
         return redirect("/debug_session")
     return redirect("/invalid_login")

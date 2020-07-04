@@ -36,24 +36,24 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 #   return json.loads(jsonString)
 
 
-def get_password(secret):
+def get_password():
     #return secret["password"]
     print(os.getenv("IG_PASSWD"))
     return str(os.getenv("IG_PASSWD"))
 
 
-def get_host(secret):
+def get_host():
     #return secret["host_name"]
     print(os.getenv("PG_HOST"))
     return str(os.getenv("PG_HOST"))
 
 
-def get_username(secret):
+def get_username():
     #return secret["username"]
     print(os.getenv("IG_USER"))
     return str(os.getenv("IG_USER"))
 
-def get_database(secret):
+def get_database():
     #return secret["database_name"]
     print(os.getenv("IG_DATABASE"))
     return str(os.getenv("IG_DATABASE"))
@@ -61,11 +61,11 @@ def get_database(secret):
 
 def connect():
     global connection
-    secret = get_secret()
+    #secret = get_secret()
     try:
         # connection = psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = password)
-        connection = psycopg2.connect(host=get_host(secret), dbname=get_database(secret), user=get_username(secret),
-                                      password=get_password(secret))
+        connection = psycopg2.connect(host=get_host(), dbname=get_database(), user=get_username(),
+                                      password=get_password())
     except psycopg2.DatabaseError as error:
         print(error)
 

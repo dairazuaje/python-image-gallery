@@ -38,7 +38,7 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 
 def get_password():
     #return secret["password"]
-    if os.getenv("IG_PASSWD_FILE") == none:
+    if os.getenv("IG_PASSWD_FILE") == None:
         print(os.getenv("IG_PASSWD"))
         return str(os.getenv("IG_PASSWD"))
     return str(os.getenv("IG_PASSWD_FILE"))

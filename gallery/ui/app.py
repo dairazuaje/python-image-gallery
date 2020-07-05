@@ -152,6 +152,10 @@ def process_add_user_form():
     username = request.form['username']
     password = request.form['password']
     fullname = request.form["fullname"]
+    if request.form["type"]:
+        print("User will be admin")
+    else:
+        print("User will not be admin")
     add(username, password, fullname)
     return render_template("process_add_user_form.html", user=username)
 

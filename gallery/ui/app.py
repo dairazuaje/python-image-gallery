@@ -111,7 +111,7 @@ def invalid_login():
 
 
 def check_admin():
-    return 'username' in session and session["username"] == "dza0042"
+    return 'username' in session and session["username"] == "dongji"
 
 
 @app.route("/admin")

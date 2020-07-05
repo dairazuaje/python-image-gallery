@@ -38,9 +38,11 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 
 def get_password():
     #return secret["password"]
-    print(os.getenv("IG_PASSWD"))
-    return str(os.getenv("IG_PASSWD"))
-
+    if os.getenv("IG_PASSWD_FILE") == none:
+        print(os.getenv("IG_PASSWD"))
+        return str(os.getenv("IG_PASSWD"))
+    return str(os.getenv("IG_PASSWD_FILE"))
+    
 
 def get_host():
     #return secret["host_name"]
@@ -64,8 +66,7 @@ def connect():
     #secret = get_secret()
     try:
         # connection = psycopg2.connect(host = db_host, dbname = db_name, user = db_user, password = password)
-        connection = psycopg2.connect(host=get_host(), dbname=get_database(), user=get_username(),
-                                      password=get_password())
+        connection = psycopg2.connect(host=get_host(), dbname=get_database(), user=get_username(), password=get_password())
     except psycopg2.DatabaseError as error:
         print(error)
 

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Database Admin Page</title>
+        <meta charset = "utf-8" />
+        <style>
+            div {
+                text-align: center;
+            }
+
+            .container {
+                width: 50%;
+                margin: auto;
+            }
+
+            figure {
+                border: thin #c0c0c0 solid;
+                display: flex;
+                flex-flow: column;
+                padding: 5px;
+                max-width: 220px;
+                margin: auto;
+            }
+
+            figcaption {
+                background-color: #222;
+                color: #fff;
+                font: italic smaller sans-serif;
+                padding: 3px;
+
+            }
+
+            .image {
+                float: left;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Images Page</h1>
+            <h2>Images for {{username}}</h2>
+            <a href="/view_images">Click Here to go back to images</a><br>
+                <figure>
+                    <img src="data:image/png;base64, {{image}}" alt="">
+                    <figcaption>{{image["name"]}}</figcaption>
+                </figure>
+            </div>
+            {%
+            endfor
+            %}
+        </div>
+    </body>
+</html>

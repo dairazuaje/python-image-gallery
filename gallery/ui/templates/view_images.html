@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Database Admin Page</title>
+        <meta charset = "utf-8" />
+        <style>
+            div {
+                text-align: center;
+            }
+
+            .container {
+                width: 50%;
+                margin: auto;
+            }
+
+            /*form {*/
+            /*    display: inline-block;*/
+            /*}*/
+
+            ol {
+                list-style-position: inside;
+            }
+
+            input {
+                background-color: red;
+                color: white;
+            }
+
+            figure {
+                border: thin #c0c0c0 solid;
+                display: flex;
+                flex-flow: column;
+                padding: 5px;
+                max-width: 220px;
+                margin: auto;
+            }
+
+            img {
+                width: 220px;
+                /*height: 150px;*/
+            }
+
+            figcaption {
+                background-color: #222;
+                color: #fff;
+                font: italic smaller sans-serif;
+                padding: 3px;
+
+            }
+
+            .image {
+                float: left;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Images Page</h1>
+            <h2>Images for {{username}}</h2>
+            <a href="/">Click Here to go back to the main page</a><br>
+            {%
+            for image in images:
+            %}
+            <div class="image">
+                <figure>
+                    <a href="/view_images/full_size/{{image["image"]}}"><img src="data:image/png;base64, {{image["image"]}}" alt=""></a>
+                    <figcaption>{{image["name"]}}</figcaption>
+                </figure>
+                <form action="/process_delete_image_form/{{image["name"]}}/{{image["owner"]}}" method="POST">
+                    <input type="submit" value="DELETE" onclick="return confirm('Are you sure want to delete image: {{image["name"]}}')">
+                </form>
+            </div>
+            {%
+            endfor
+            %}
+        </div>
+    </body>
+</html>

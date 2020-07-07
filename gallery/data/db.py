@@ -1,20 +1,17 @@
 import os
 import psycopg2
 import json
+import base64
 from psycopg2 import OperationalError, errorcodes, errors
+from PIL import Image
 from ..aws.secrets import *
 from ..aws.s3 import *
 
-# Configuration
-# db_host = "module5-image-gallery.cyoqs8hmumyv.us-east-1.rds.amazonaws.com"
-# db_name = "image_gallery"
-# db_user = "image_gallery"
-# password_file = "/home/ec2-user/.image_gallery_config"
-# password = "Keldailin120217!"
-BUCKET_NAME = "edu.au.cc.image-gallery-photos-dza0042"
+
+BUCKET_NAME = os.getenv("S3_IMAGE_BUCKET")
 # SQL Queries
 sql_select_all = "SELECT * FROM users;"
-sql_add = "INSERT INTO users VALUES (%s, %s, %s);"
+sql_add = "INSERT INTO users VALUES (%s, %s, %s, %s);"
 sql_update_pw = "UPDATE users SET password = %s WHERE username = %s;"
 sql_update_fn = "UPDATE users SET full_name = %s WHERE username = %s;"
 sql_update_pw_fn = "UPDATE users SET full_name = %s, password = %s  WHERE username = %s;"
@@ -29,11 +26,6 @@ sql_columns = "SELECT * FROM users LIMIT 0"
 #    jsonString = jsonString.replace("'", "\"")
 #    sec = json.loads(jsonString)
 #    return sec
-
-# Retrieves password in original VPC that was created
-#def get_secret():
-#    jsonString = get_secret_image_gallery()
-#   return json.loads(jsonString)
 
 
 def get_password():
@@ -98,14 +90,14 @@ def delete(user):
     close()
 
 
-def add(user, pw, fn):
+def add(user, pw, fn, user_type):
     connect()
     global connection
     global cursor
 
     cursor = connection.cursor()
 
-    cursor.execute(sql_add, (user, pw, fn,))
+    cursor.execute(sql_add, (user, pw, fn, user_type,))
     print("user added")
     if cursor.rowcount != -1:
         print("User has been added")
@@ -147,7 +139,33 @@ def check_user(user):
         return True
     else:
         return False
-        print(error)
+
+
+def check_user_login(user):
+    connect()
+    global connection
+    global cursor
+    cursor = connection.cursor()
+    sql = "SELECT user_type FROM users WHERE username = %s;"
+    cursor.execute(sql, (user,))
+    result = cursor.fetchall()
+    print("Checking user: " + str(result[0][0]))
+    if (result[0][0] == "User"):
+        return True
+    return False
+
+def check_admin_login(user):
+    connect()
+    global connection
+    global cursor
+    cursor = connection.cursor()
+    sql = "SELECT user_type FROM users WHERE username = %s;"
+    cursor.execute(sql, (user,))
+    result = cursor.fetchall()
+    print("Checking admin: " + str(result[0][0]))
+    if (result[0][0] == "Admin"):
+        return True
+    return False
 
 
 def check_password(user, password):
@@ -171,6 +189,45 @@ def add_image_db(username, filename):
     sql = "INSERT INTO images (image_name, owner) VALUES (%s, %s);"
     cursor.execute(sql, (filename, username,))
     print("added!")
+    close()
+
+
+def get_images(username):
+    connect()
+    global connection
+    global cursor
+    cursor = connection.cursor()
+    sql = "SELECT image_name FROM images WHERE owner =%s;"
+    cursor.execute(sql, (username,))
+    image_names = cursor.fetchall()
+    images_arr = []
+    directory = username + "/"
+
+    for name in image_names:
+
+        image_data = get_object(BUCKET_NAME, str(directory + name[0]))["Body"].read()
+        image_b64 = base64.b64encode(image_data).decode("utf-8")
+
+        image = {
+            "name": name[0],
+            "image": image_b64,
+            "owner": username
+        }
+
+        images_arr.append(image)
+
+    return images_arr
+
+def delete_image(image_name, user):
+    connect()
+    global connection
+    global cursor
+    cursor = connection.cursor()
+    sql = "DELETE FROM images WHERE image_name = %s AND owner = %s;"
+    cursor.execute(sql, (image_name, user,))
+    print("Image has been deleted")
+    print("Image Name: " + image_name)
+    print("Owner: " + user)
     close()
 
 def close():

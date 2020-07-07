@@ -10,11 +10,11 @@ from ..aws.s3 import *
 
 from werkzeug.utils import secure_filename
 
-BUCKET_NAME = "edu.au.cc.image-gallery-photos-dza0042"
+BUCKET_NAME = os.getenv("S3_IMAGE_BUCKET")
 ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
-app.config['BUCKET_NAME'] = BUCKET_NAME
+app.config['BUCKET_NAME'] = os.getenv("S3_IMAGE_BUCKET")
 app.secret_key = get_secret_flask_session()
 
 def allowed_file(filename):
@@ -22,11 +22,31 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def requires_admin(view):
+    @wraps(view)
+    def decorated(**kwargs):
+        if session.get("username") is None:
+            return redirect("/login")
+        if not check_admin_login(session["username"]):
+            return redirect("/login")
+        return view(**kwargs)
+    return decorated
 
 
-@app.route('/upload_image', methods=['GET', 'POST'])
+def requires_login(view):
+    @wraps(view)
+    def decorated(**kwargs):
+        print(session)
+        if session.get("username") is None:
+            return redirect("/login")
+        if not check_user_login(session["username"]) and not check_admin_login(session["username"]):
+            return redirect("/login")
+        return view(**kwargs)
+    return decorated
+
+
+@app.route("/upload_image", methods=["GET", "POST"])
+@requires_login
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -59,25 +79,15 @@ def upload_file():
     '''
 
 
-def requires_admin(view):
-    @wraps(view)
-    def decorated(**kwargs):
-        if not check_admin():
-            return redirect("/login")
-        return view(**kwargs)
-    return decorated
-
-
-def requires_user(view):
-    @wraps(view)
-    def decorated(**kwargs):
-        if not check_user():
-            return redirect("/login")
-        return view(**kwargs)
-    return decorated
+@app.route("/view_images")
+@requires_login
+def view_images():
+    images = get_images(session["username"])
+    return render_template("view_images.html", images=images, username=session["username"])
 
 
 @app.route("/")
+@requires_login
 def main():
     return render_template("main.html")
 
@@ -101,7 +111,7 @@ def process_login():
     password = request.form["password"]
     if check_password(username, password):
         session["username"] = request.form["username"]
-        return redirect("/debug_session")
+        return redirect("/")
     return redirect("/invalid_login")
 
 
@@ -110,11 +120,7 @@ def invalid_login():
     return "Invalid"
 
 
-def check_admin():
-    return 'username' in session and session["username"] == "dongji"
-
-
-@app.route("/admin")
+@app.route("/admin/users")
 @requires_admin
 def admin():
     users = select_all()
@@ -152,11 +158,14 @@ def process_add_user_form():
     username = request.form['username']
     password = request.form['password']
     fullname = request.form["fullname"]
-    if request.form["type"]:
+    print(request.form.get("type"))
+    if request.form.get("type") == "on":
         print("User will be admin")
+        add(username, password, fullname, "Admin")
     else:
         print("User will not be admin")
-    add(username, password, fullname)
+        add(username, password, fullname, "User")
+    
     return render_template("process_add_user_form.html", user=username)
 
 
@@ -165,3 +174,16 @@ def process_add_user_form():
 def process_delete_user_form(user):
     delete(user)
     return render_template("process_delete_user_form.html", user=user)
+
+
+@app.route("/process_delete_image_form/<image_name>/<user>", methods=["POST"])
+@requires_login
+def process_delete_image_form(image_name, user):
+    delete_image(image_name, user)
+    return render_template("process_delete_image_form.html")
+
+@app.route("/view_images/full_size/<image>")
+@requires_login
+def show_full_image(image):
+    print(image)
+    return render_template("full_size.html", image=image)

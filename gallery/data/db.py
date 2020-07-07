@@ -33,7 +33,10 @@ def get_password():
     if os.getenv("IG_PASSWD_FILE") == None:
         print(os.getenv("IG_PASSWD"))
         return str(os.getenv("IG_PASSWD"))
-    return str(os.getenv("IG_PASSWD_FILE"))
+    f = open(str(os.getenv("IG_PASSWD_FILE")), "r")
+    result = f.readline()
+    f.close()
+    return result[:-1]
     
 
 def get_host():

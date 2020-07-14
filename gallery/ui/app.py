@@ -15,8 +15,17 @@ ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['BUCKET_NAME'] = os.getenv("S3_IMAGE_BUCKET")
-app.secret_key = get_secret_flask_session()
+#app.secret_key = get_secret_flask_session()
+app.secret_key = get_docker_secret_flask_session()
 
+
+def get_docker_secret_flask_session():
+    f = open(str(os.getenv("FLASK_SESSION")), "r")
+    result = f.readline()
+    f.close()
+    return result[:-1]
+
+    
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
